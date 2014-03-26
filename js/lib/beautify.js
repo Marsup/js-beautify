@@ -1171,7 +1171,9 @@
             }
             var empty_braces = last_type === 'TK_START_BLOCK';
 
-            if (opt.brace_style === "expand") {
+            if (flags.parent.last_word === 'var' || flags.parent.last_word === 'let' || flags.parent.last_word === 'const') {
+                output_space_before_token = true;
+            } else if (opt.brace_style === "expand") {
                 if (!empty_braces) {
                     print_newline();
                 }
@@ -1199,6 +1201,7 @@
             } else if (input_wanted_newline && !is_expression(flags.mode) &&
                 (last_type !== 'TK_OPERATOR' || (flags.last_text === '--' || flags.last_text === '++')) &&
                 last_type !== 'TK_EQUALS' &&
+                !(last_type === 'TK_COMMA' && in_array(flags.last_text, ['var', 'let', 'const'])) &&
                 (opt.preserve_newlines || !in_array(flags.last_text, ['var', 'let', 'const']))) {
 
                 print_newline();
@@ -1274,7 +1277,7 @@
             }
 
             if (last_type === 'TK_COMMA' || last_type === 'TK_START_EXPR' || last_type === 'TK_EQUALS' || last_type === 'TK_OPERATOR') {
-                if (!start_of_object_property()) {
+                if (!start_of_object_property() && flags.parent.last_word !== 'var' && flags.parent.last_word !== 'let' && flags.parent.last_word !== 'const') {
                     allow_wrap_or_preserved_newline();
                 }
             }
@@ -1345,6 +1348,8 @@
                         // no need to force newline on 'var': for (var x = 0...)
                         if (token_text === 'if' && flags.last_word === 'else' && flags.last_text !== '{') {
                             // no newline for } else if {
+                            output_space_before_token = true;
+                        } else if(flags.last_text === '{' && (flags.last_word === 'var' || flags.last_word === 'let' || flags.last_word === 'const')) {
                             output_space_before_token = true;
                         } else {
                             flags.var_line = false;

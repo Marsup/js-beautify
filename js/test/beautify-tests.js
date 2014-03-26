@@ -141,7 +141,6 @@ function run_beautifier_tests(test_obj, Urlencoded, js_beautify, html_beautify, 
         opts.keep_array_indentation = false;
         opts.brace_style       = "collapse";
 
-
         bt('');
         bt('return .5');
         test_fragment('   return .5');
@@ -158,6 +157,12 @@ function run_beautifier_tests(test_obj, Urlencoded, js_beautify, html_beautify, 
         bt('const a = 1 const b = 2', "const a = 1\nconst b = 2");
         bt('const a=1, b=c[d], e=6;', 'const a = 1,\n    b = c[d],\n    e = 6;');
         bt('const a,\n    b,\n    c;');
+        bt('var { a, b, c, d,e,f } = g;', 'var { a, b, c, d, e, f } = g;');
+        bt('var { a,\nb,\nc,\nd,e,f } = g;', 'var { a, b, c, d, e, f } = g;');
+        bt('let { a, b, c, d,e,f } = g;', 'let { a, b, c, d, e, f } = g;');
+        bt('let { a,\nb,\nc,\nd,e,f } = g;', 'let { a, b, c, d, e, f } = g;');
+        bt('const { a, b, c, d,e,f } = g;', 'const { a, b, c, d, e, f } = g;');
+        bt('const { a,\nb,\nc,\nd,e,f } = g;', 'const { a, b, c, d, e, f } = g;');
         bt('a = " 12345 "');
         bt("a = ' 12345 '");
         bt('if (a == 1) b = 2;', "if (a == 1) b = 2;");
